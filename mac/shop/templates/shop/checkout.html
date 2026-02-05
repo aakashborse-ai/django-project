@@ -1,0 +1,157 @@
+{% extends 'shop/basic.html' %}
+{% block title%} Checkout - My Awesome Cart{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="col my-4">
+        <h2>Step 1 - My Awesome Cart Express Checkout - Review Your Cart Items</h2>
+        <div class="my-4">
+            <ul class="list-group" id="items">
+            </ul>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mt-3">
+                    <li class="breadcrumb-item active" aria-current="page">Your Cart Total Is Rs.<b><span id="totalprice">0 </span></b>  Enter your details below & place your order. Thanks for using My Awesome Cart!</li>
+                </ol>
+            </nav>
+            
+        </div>
+    <div class="col my-4">
+        <h2>Step 2 - Enter Address & Other Details:</h2>
+        <form method="post" action="/shop/checkout/">
+            <input type="hidden" name="itemsJson" id="itemsJson">
+            <input type="hidden" name="amount" id="amount">
+            <div class="form-row">
+                {% csrf_token %}
+                <div id="form-error" class="text-danger mb-2"></div>
+                <div class="form-group col-md-6">
+                    <label for="inputname">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputAddress">Address</label>
+                <input type="text" class="form-control" id="address1" name="address1" placeholder="1234 Main St" required>
+            </div>
+            <div class="form-group">
+                <label for="inputAddress2">Address line 2</label>
+                <input type="text" class="form-control" id="address2" name="address2" placeholder="Apartment, studio, or floor" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputCity">City</label>
+                    <input type="text" class="form-control" id="city" name="city" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="inputState">State</label>
+                    <input type="text" class="form-control" id="state" name="state"  placeholder="Enter State" required>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="inputZip">Zip</label>
+                    <input type="text" class="form-control" id="zip_code" name="zip_code" required placeholder="enter 6 digit zipo code">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputZip">Phone Number</label>
+                <input type="tel" class="form-control" id="phone" name="phone"  placeholder="enter phone number 10 digits">
+            </div>
+            <button type="submit" class="btn btn-primary">Place Order</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+if (localStorage.getItem('cart') == null) {
+    var cart = {};
+} else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+}
+console.log(cart);
+var sum= 0
+var totalprice=0;
+if ($.isEmptyObject(cart)) {
+    //if object is empty
+    mystr = `<p>Your cart is empty, please add some items to your cart before checking out!</p>`
+    $('#items').append(mystr);
+} else {
+    for (item in cart) {
+        let name = cart[item][1];
+        let qty = cart[item][0];
+        let itemPrice = cart[item][2];
+        sum = sum + qty;
+        totalprice = totalprice + qty * itemPrice
+        mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    ${name}
+                    <span class="badge badge-primary badge-pill">${qty}</span>
+                </li>`
+        $('#items').append(mystr);
+    }
+}
+document.getElementById('cart').innerHTML = sum;
+document.getElementById('totalprice').innerHTML = totalprice;
+$('#itemsJson').val(JSON.stringify(cart));
+{% if thank %}
+alert('Thanks for ordering with us. Your order is {{id}}. Use it to track your order using our order tracker');
+localStorage.clear();
+{% if request.user.is_authenticated %}
+  // redirect to the invoice page for logged-in users
+  document.location = "/shop/orders/{{id}}/invoice/";
+{% else %}
+  // ask user to login to view full invoice
+  document.location = "/shop/login/?next=/shop/orders/{{id}}/invoice/";
+{% endif %}
+{% endif %}
+</script>
+<script>
+// Client-side validation: phone must be exactly 10 digits, zip numeric up to 6 digits
+;(function(){
+    var form = document.querySelector('form');
+    var phoneEl = document.getElementById('phone');
+    var zipEl = document.getElementById('zip_code');
+    var errorEl = document.getElementById('form-error');
+
+    function showError(msg){
+        errorEl.textContent = msg;
+    }
+
+    // Prevent non-digits while typing and enforce max lengths
+    if (phoneEl){
+        phoneEl.addEventListener('input', function(){
+            this.value = this.value.replace(/\D+/g, '').slice(0,10);
+        });
+    }
+    if (zipEl){
+        zipEl.addEventListener('input', function(){
+            this.value = this.value.replace(/\D+/g, '').slice(0,6);
+        });
+    }
+
+    if (form){
+        form.addEventListener('submit', function(e){
+            var phone = phoneEl ? phoneEl.value.trim() : '';
+            var zip = zipEl ? zipEl.value.trim() : '';
+            var errors = [];
+            if (!/^\d{10}$/.test(phone)){
+                errors.push('Phone must be exactly 10 digits');
+            }
+            if (zip && !/^\d{1,6}$/.test(zip)){
+                errors.push('Zip must be numeric and at most 6 digits');
+            }
+            if (errors.length){
+                e.preventDefault();
+                showError(errors.join(' ; '));
+                window.scrollTo({ top: errorEl.getBoundingClientRect().top + window.scrollY - 20, behavior: 'smooth' });
+                return false;
+            }
+            // clear any previous error
+            showError('');
+        });
+    }
+})();
+// End client-side validation
+$('#amount').val($('#totalprice').html())
+</script>
+{% endblock %}

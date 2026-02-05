@@ -1,0 +1,224 @@
+{% extends 'shop/basic.html' %}
+
+{% block title%} About Us{% endblock %}
+{% block body %}
+<style>
+/* Polished About page styles */
+.about-hero{ background: linear-gradient(90deg, #ffffff 0%, #f8f9fa 100%); padding: 3.5rem 0; }
+.about-hero h1{ font-weight:700; letter-spacing:-0.5px; }
+.feature-svg{ width:48px; height:48px; display:inline-block; border-radius:8px; padding:8px; background:#f0f6ff; color:#0b5ed7; }
+.card-equal { display:flex; flex-direction:column; }
+.card-equal .card-body{ flex:1 1 auto; }
+.timeline-faq .card-header{ cursor:pointer; }
+</style>
+
+<main role="main">
+  <section class="about-hero">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-7">
+          <h1 class="display-4">We make online shopping effortless</h1>
+          <p class="lead text-muted">My Awesome Cart provides a modern, secure and fast e-commerce experience with curated products across categories — electronics, fashion, home and more. Built for performance and simplicity.</p>
+          <p>
+            <a class="btn btn-primary btn-lg mr-2" href="{% url 'ShopHome' %}" role="button">Shop Now</a>
+            <a class="btn btn-success btn-lg" href="{% url 'ContactUs' %}" role="button">Contact Sales</a>
+          </p>
+        </div>
+        <div class="col-md-5 text-center d-none d-md-block">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQl0mIibVond5Zn7r6GlB_EaFGIpR5DG5yKxw&s" alt="shop graphic" class="img-fluid rounded shadow-sm">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container my-5">
+    <div class="row g-3 text-center">
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm card-equal h-100">
+          <div class="card-body">
+            <div class="mb-3">
+              <span class="feature-svg" aria-hidden="true">
+                <!-- Truck SVG -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#0b5ed7" width="32" height="32" aria-hidden="true"><path d="M3 3h11v13H3z" opacity=".2"/><path d="M21 8h-3V4H6v8h2a3 3 0 0 0 6 0h2a3 3 0 0 0 6 0h-1V8zM7 6h6v4H7V6z"/></svg>
+              </span>
+            </div>
+            <h5 class="card-title">Fast Delivery</h5>
+            <p class="card-text text-muted">Reliable delivery with tracking and smooth returns.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm card-equal h-100">
+          <div class="card-body">
+            <div class="mb-3">
+              <span class="feature-svg" aria-hidden="true">
+                <!-- Lock SVG -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#16a34a" width="32" height="32" aria-hidden="true"><path d="M12 1a4 4 0 0 0-4 4v3H7a1 1 0 0 0-1 1v9h12v-9a1 1 0 0 0-1-1h-1V5a4 4 0 0 0-4-4z"/></svg>
+              </span>
+            </div>
+            <h5 class="card-title">Secure Checkout</h5>
+            <p class="card-text text-muted">Multiple secure payment methods and fraud protection.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm card-equal h-100">
+          <div class="card-body">
+            <div class="mb-3">
+              <span class="feature-svg" aria-hidden="true">
+                <!-- Headset SVG -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#0ea5e9" width="32" height="32" aria-hidden="true"><path d="M12 1a9 9 0 0 0-9 9v4a5 5 0 0 0 5 5h.5a3.5 3.5 0 0 0 3.5-3.5V12A3 3 0 0 1 15 9a3 3 0 0 1 3 3v3.5A3.5 3.5 0 0 0 21.5 20H22v-2a9 9 0 0 0-10-17z"/></svg>
+              </span>
+            </div>
+            <h5 class="card-title">24/7 Support</h5>
+            <p class="card-text text-muted">Friendly support available whenever you need assistance.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-5">
+
+    <div class="row my-4 row-equal">
+      <div class="col-md-6 mb-3 d-flex">
+        <div class="card border-0 shadow-sm w-100">
+          <div class="card-body d-flex flex-column">
+            <h3 class="card-title">Our Mission</h3>
+            <p class="text-muted flex-grow-1">To connect customers with high-quality products and deliver an intuitive shopping experience supported by reliable infrastructure and friendly support.</p>
+            <ul class="list-unstyled text-muted mb-0">
+              <li>• Customer-first experience</li>
+              <li>• Secure & scalable platform</li>
+              <li>• Continuous improvement</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-3 d-flex">
+        <div class="card border-0 shadow-sm w-100">
+          <div class="card-body d-flex flex-column">
+            <h3 class="card-title">Our Vision</h3>
+            <p class="text-muted flex-grow-1">A simple, delightful online marketplace where customers can discover and purchase products with confidence.</p>
+            <p class="mb-0">We strive to create delightful experiences that earn customers' trust and loyalty.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-5">
+
+    <div class="row">
+      <div class="col-md-7">
+        <h3>Frequently Asked Questions</h3>
+        <div id="faqAccordion" class="timeline-faq">
+          <div class="card">
+            <div class="card-header" role="tab" id="headingOne">
+              <h6 class="mb-0">
+                <button class="btn btn-link p-3 text-left w-100" data-toggle="collapse" data-target="#faq1" aria-expanded="true" aria-controls="faq1">How long does delivery take?</button>
+              </h6>
+            </div>
+
+            <div id="faq1" class="collapse show" role="tabpanel" aria-labelledby="headingOne" data-parent="#faqAccordion">
+              <div class="card-body">Delivery typically takes 3–7 business days depending on location and availability.</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header" role="tab" id="headingTwo">
+              <h6 class="mb-0">
+                <button class="btn btn-link p-3 text-left w-100 collapsed" data-toggle="collapse" data-target="#faq2" aria-expanded="false" aria-controls="faq2">What is your return policy?</button>
+              </h6>
+            </div>
+            <div id="faq2" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#faqAccordion">
+              <div class="card-body">We offer 30-day returns for most items; see product pages for details.</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header" role="tab" id="headingThree">
+              <h6 class="mb-0">
+                <button class="btn btn-link p-3 text-left w-100 collapsed" data-toggle="collapse" data-target="#faq3" aria-expanded="false" aria-controls="faq3">How can I contact support?</button>
+              </h6>
+            </div>
+            <div id="faq3" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#faqAccordion">
+              <div class="card-body">You can use our contact page, or email support@example.com. We are available 9am–6pm Monday–Friday.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-5">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Want to stay updated?</h5>
+            <p class="text-muted">Subscribe to our newsletter for exclusive offers and product updates.</p>
+            <form class="form-inline" id="subscribeForm" method="post" action="{% url 'Subscribe' %}">
+              {% csrf_token %}
+              <div class="input-group w-100">
+                <input type="email" name="email" class="form-control" id="subscribeEmail" placeholder="Your email" aria-label="Email" required>
+                <div class="input-group-append">
+                  <button class="btn btn-primary mx-2" type="submit" id="subscribeBtn">Subscribe</button>
+                </div>
+              </div>
+            </form>
+            <div id="subscribeMsg" class="mt-2 small text-muted" role="status" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+</main>
+
+{% endblock %}
+
+{% block js %}
+<script>
+// FAQ chevron toggle and newsletter mock
+$(document).ready(function(){
+  $('#faqAccordion').on('show.bs.collapse', function(e){
+    $(e.target).prev('.card-header').addClass('active');
+  });
+  $('#faqAccordion').on('hide.bs.collapse', function(e){
+    $(e.target).prev('.card-header').removeClass('active');
+  });
+
+  $('#subscribeForm').on('submit', function(e){
+    e.preventDefault();
+    var $form = $(this);
+    var $msg = $('#subscribeMsg');
+    $msg.removeClass('text-danger text-success').addClass('text-muted').text('');
+
+    var email = $('#subscribeEmail').val();
+    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
+      $msg.text('Please enter a valid email address.').addClass('text-danger').removeClass('text-muted');
+      return;
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: $form.attr('action'),
+      data: $form.serialize(),
+      dataType: 'json'
+    }).done(function(resp){
+      if (resp.status === 'ok'){
+        $msg.text('Thanks — you are subscribed!').removeClass('text-muted').addClass('text-success');
+        $('#subscribeEmail').val('');
+      } else if (resp.status === 'exists'){
+        $msg.text('You are already subscribed.').removeClass('text-muted').addClass('text-success');
+      } else {
+        $msg.text(resp.message || 'An error occurred.').addClass('text-danger').removeClass('text-muted');
+      }
+    }).fail(function(xhr){
+      var msg = 'Network error. Please try again later.';
+      if (xhr && xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON.message;
+      $msg.text(msg).addClass('text-danger').removeClass('text-muted');
+    });
+
+  });
+});
+</script>
+{% endblock %}

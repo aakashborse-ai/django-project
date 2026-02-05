@@ -1,0 +1,64 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %}Invoice - {{ invoice.invoice_no|default:order.invoice_number }}{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+  <div class="card">
+    <div class="card-body">
+      <div class="d-flex justify-content-between mb-3">
+        <div>
+          <h5>Invoice {{ invoice.invoice_no|default:order.invoice_number }}</h5>
+          <div class="text-muted">Order #{{ order.order_id }}</div>
+        </div>
+        <div class="text-right">
+          <div>{{ invoice.created_at|default:order.created_at }}</div>
+          <div>Amount: <strong>Rs. {{ invoice.total|default:order.amount }}</strong></div>
+        </div>
+      </div>
+
+      <h6>Customer</h6>
+      <p>
+        {{ invoice.customer.name|default:order.name }}<br>
+        {{ invoice.customer.email|default:order.email }}<br>
+        {{ invoice.customer.address|default:order.address }}
+      </p>
+
+      <h6>Items</h6>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Item</th>
+              <th>Qty</th>
+              <th>Unit</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in invoice.items %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.qty }}</td>
+                <td>Rs. {{ item.unit_price }}</td>
+                <td>Rs. {{ item.total }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="d-flex justify-content-end">
+        <div class="text-right">
+          <p class="mb-1">Subtotal: Rs. {{ invoice.subtotal }}</p>
+          <p class="mb-1">Total: <strong>Rs. {{ invoice.total }}</strong></p>
+          <button onclick="window.print()" class="btn btn-sm btn-outline-secondary">Print / Save as PDF</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

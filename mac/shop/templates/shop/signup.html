@@ -1,0 +1,93 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %}Sign Up - My Awesome Cart{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-10 col-sm-8 col-md-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Create an account</h5>
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+          <form method="post" action="{% url 'Signup' %}" class="needs-validation" novalidate>
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" name="username" id="username" class="form-control" required>
+              <div class="invalid-feedback">Please enter a username.</div>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" name="email" id="email" class="form-control" required>
+              <div class="invalid-feedback">Please enter a valid email address.</div>
+            </div>
+            <div class="form-group">
+              <label for="password1">Password</label>
+              <input type="password" name="password1" id="password1" class="form-control" required minlength="8" aria-describedby="passwordHelp">
+              <small id="passwordHelp" class="form-text text-muted">At least 8 chars, with uppercase, lowercase, number, and special character.</small>
+              <div class="invalid-feedback">Password must be at least 8 chars and meet complexity requirements.</div>
+            </div>
+            <div class="form-group">
+              <label for="password2">Confirm Password</label>
+              <input type="password" name="password2" id="password2" class="form-control" required>
+              <div class="invalid-feedback">Passwords must match.</div>
+            </div>
+            <button class="btn btn-primary btn-block btn-sm" type="submit">Create account</button>
+            <div class="text-center mt-3">
+              <a href="{% url 'Login' %}">Already have an account? Login</a>
+            </div>
+          </form>
+          <script>
+          // Bootstrap validation + password match + strength check
+          (function(){
+            var form = document.querySelector('.needs-validation');
+            var p1 = document.getElementById('password1');
+            var p2 = document.getElementById('password2');
+            var pwdHelp = document.getElementById('passwordHelp');
+
+            function isStrongPassword(p){
+              return /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}/.test(p);
+            }
+
+            p1.addEventListener('input', function(){
+              if (!isStrongPassword(p1.value)){
+                p1.setCustomValidity('Weak password');
+                if (pwdHelp) pwdHelp.classList.add('text-danger');
+              } else {
+                p1.setCustomValidity('');
+                if (pwdHelp) pwdHelp.classList.remove('text-danger');
+              }
+            });
+
+            form.addEventListener('submit', function(e){
+              if (p1.value !== p2.value){
+                p2.setCustomValidity('Passwords do not match');
+              } else { p2.setCustomValidity(''); }
+
+              if (!isStrongPassword(p1.value)){
+                p1.setCustomValidity('Password must be at least 8 characters and include uppercase, lowercase, number and special character');
+              }
+
+              if (!form.checkValidity()){
+                e.preventDefault(); e.stopPropagation();
+                form.classList.add('was-validated');
+              }
+            }, false);
+          })();
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

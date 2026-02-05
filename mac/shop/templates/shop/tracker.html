@@ -1,0 +1,344 @@
+{% extends 'shop/basic.html' %}
+{% block title%} My Awesome Cart Tracker{% endblock %}
+{% block body %}
+<style>
+/* Tracker specific styles */
+/* ===== Tracker Card Styling ===== */
+.track-card {
+    border: 1px solid #dfbdc5;
+    border-left: 5px solid #0d6efd;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    background: #c79595;
+}
+
+/* ===== Card Headings ===== */
+.card-title {
+    font-weight: 700;
+    color: #2e0309;
+    border-bottom: 2px solid #68071f;
+    padding-bottom: 10px;
+    margin-bottom: 1rem;
+}
+
+/* ===== Form Styling ===== */
+#trackerForm .form-control {
+    border-radius: 6px;
+    border: 1px solid #5a0410;
+}
+
+#trackerForm .form-control:focus {
+    border-color: #000813;
+    box-shadow: 0 0 0 0.15rem rgba(13,110,253,.25);
+}
+
+#trackerForm .btn-primary {
+    border-radius: 6px;
+    padding: 6px 18px;
+    font-weight: 600;
+    border-color: #000813;
+}
+
+/* ===== Progress Bar ===== */
+.progress {
+    height: 10px;
+    border-radius: 20px;
+    background-color: #2f2e745d;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, #0d6efd, #6610f2);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* ===== Timeline ===== */
+.timeline {
+    list-style: none;
+    position: relative;
+    margin-top: 1.5rem;
+    padding-left: 0;
+}
+
+.timeline:before {
+    content: '';
+    position: absolute;
+    left: 22px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: #8baed1;
+    border-radius: 10px;
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 60px;
+    padding-bottom: 1.5rem;
+}
+
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+/* Timeline Badge */
+.timeline-badge {
+    position: absolute;
+    left: 15px;
+    top: 4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #adb5bd;
+    border: 3px solid #ffffff;
+    box-shadow: 0 0 0 2px #dee2e6;
+}
+
+/* Completed Step */
+.timeline-item.completed .timeline-badge {
+    background: #198754;
+    box-shadow: 0 0 0 2px rgba(25,135,84,.25);
+}
+
+.timeline-item.completed .font-weight-bold {
+    color: #630f0c;
+}
+
+/* Active Step */
+.timeline-item.active .timeline-badge {
+    background: #0d6efd;
+    box-shadow: 0 0 0 2px rgba(13,110,253,.3);
+}
+
+.timeline-item.active .font-weight-bold {
+    color: #0d6efd;
+}
+
+/* Time Text */
+.timeline-item .time {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+/* ===== Order Details Card ===== */
+.col-md-5 .card {
+    border-radius: 10px;
+    border: 1px solid #630b41;
+    box-shadow: 0 6px 20px rgba(54, 2, 2, 0.05);
+}
+
+/* Order Items */
+#citems .list-group-item {
+    border: none;
+    border-bottom: 1px solid #f1f3f5;
+    font-size: 0.9rem;
+}
+
+#citems .list-group-item:last-child {
+    border-bottom: none;
+}
+
+#citems .badge {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+}
+
+/* Order Summary */
+#orderSummary {
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 0.85rem;
+}
+
+/* ===== Empty & Error States ===== */
+.text-danger {
+    font-weight: 600;
+}
+
+.text-muted {
+    font-size: 0.9rem;
+    
+    
+}
+.text-muted {
+   
+    
+   color: #52094c !important;
+}
+/* ===== Shared Light Pink Theme ===== */
+:root {
+    --pink-bg: #f3d1d1;
+    --pink-card: #c79595;
+    --pink-border: #8b1d3a;
+    --pink-text: #52094c;
+}
+
+/* Tracker Card */
+.track-card {
+    background: var(--pink-card);
+    border: 1px solid var(--pink-border);
+    border-left: 6px solid #0d6efd;
+}
+
+/* Order Details Card */
+.order-details-body {
+    background: var(--pink-bg);
+    border-radius: 8px;
+}
+
+/* Card Title */
+.card-title {
+    color: #2e0309;
+}
+
+/* Muted Text Cleanup */
+.text-muted {
+    color: var(--pink-text) !important;
+    font-size: 0.9rem;
+}
+
+/* Timeline line */
+.timeline:before {
+    background: #9c4a6b;
+}
+
+/* Improve List Items Contrast */
+.list-group-item {
+    background: transparent;
+}
+
+/* Button Hover Enhancement */
+#trackerForm .btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0b5ed7;
+}
+
+
+</style>
+
+<div class="container my-4">
+  <div class="row">
+    <div class="col-md-7 mb-3">
+      <div class="card track-card">
+        <div class="card-body">
+          <h4 class="card-title">Track your Order</h4>
+          <form method="post" action="#" id="trackerForm" class="form-inline mb-3">{% csrf_token %}
+            <div class="form-group mr-2 mb-2">
+              <label for="orderId" class="sr-only">Order Id</label>
+              <input type="text" class="form-control" id="orderId" name="orderId" placeholder="Order Id" required>
+            </div>
+            <div class="form-group mr-2 mb-2">
+              <label for="email" class="sr-only">Email</label>
+              <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Track</button>
+          </form>
+
+          <div id="trackResult" class="mt-2">
+            <h6 class="text-muted">Status</h6>
+            <div class="progress mb-3">
+              <div id="trackProgress" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+            </div>
+            <ul class="timeline" id="items">
+              <li class="text-muted color: #8e73db">Enter your Order Id and Email and click Track Order to find details about your order!</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-5">
+      <div class="card">
+        <div class="card-body order-details-body">
+
+          <h5 class="card-title">Order Details</h5>
+          <ul class="list-group mb-3" id="citems">
+            <li class="list-group-item text-muted">Order details will appear here after tracking.</li>
+          </ul>
+          <div id="orderSummary" class="small text-muted"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block js %}
+<script>
+$('#trackerForm').submit(function(event) {
+    event.preventDefault();
+    $('#items').empty();
+    $('#citems').empty();
+    $('#orderSummary').empty();
+    $('#trackProgress').css('width','0%').attr('aria-valuenow',0).text('0%');
+
+    var formData = {
+        'orderId': $('input[name=orderId]').val(),
+        'email': $('input[name=email]').val(),
+        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+    };
+
+    $.ajax({
+        type: 'POST',
+        url: '/shop/tracker/',
+        data: formData,
+        encode: true
+    }).done(function(data) {
+        // server may return a string or an already-parsed object depending on headers
+        if (typeof data === 'string') {
+            try {
+                data = JSON.parse(data);
+            } catch (e) {
+                $('#items').append('<li class="text-danger">Unexpected response from server.</li>');
+                return;
+            }
+        }
+
+        if (data && data['status'] == 'success') {
+            updates = data['updates'];
+            $('#items').empty();
+            var totalSteps = Math.max(4, updates.length);
+            for (var i = 0; i < updates.length; i++) {
+                var text = updates[i]['text'];
+                var time = updates[i]['time'];
+                var cls = (i < updates.length - 1) ? 'completed' : 'active';
+                var li = `<li class="timeline-item ${cls}">
+                            <span class="timeline-badge"></span>
+                            <div class="font-weight-bold">${text}</div>
+                            <div class="time">${time}</div>
+                          </li>`;
+                $('#items').append(li);
+            }
+            var progress = Math.min(100, Math.round((updates.length / totalSteps) * 100));
+            $('#trackProgress').css('width', progress + '%').attr('aria-valuenow', progress).text(progress + '%');
+
+            // order details
+            cart = JSON.parse(data['itemsJson']);
+            $('#citems').empty();
+            var totalItems = 0;
+            var totalPrice = 0;
+            for (var item in cart) {
+                var name = cart[item][1];
+                var qty = cart[item][0];
+                var price = cart[item].length > 2 ? cart[item][2] : 0;
+                totalItems += Number(qty);
+                totalPrice += Number(price) * Number(qty);
+                var str = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                             ${name}
+                             <span class="badge badge-primary badge-pill">${qty}</span>
+                           </li>`;
+                $('#citems').append(str);
+            }
+            $('#orderSummary').html(`Order ID: <strong>${formData.orderId}</strong><br>Total items: <strong>${totalItems}</strong><br>Total: <strong>Rs.${totalPrice}</strong>`);
+        } else {
+            $('#items').append('<li class="text-danger">Sorry, we could not fetch this order id and email. Make sure to type correct order id and email.</li>');
+            $('#citems').append('<li class="list-group-item text-muted">No details available.</li>');
+        }
+    }).fail(function() {
+        $('#items').append('<li class="text-danger">Network error. Please try again later.</li>');
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %}My Orders - My Awesome Cart{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+  <h3>Your Orders</h3>
+  <p class="text-muted">Below are orders you have placed. Click "View" to see the invoice.</p>
+
+  {% if orders %}
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Invoice</th>
+            <th>Date</th>
+            <th>Amount</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+            <tr>
+              <td>#{{ order.order_id }}</td>
+              <td>{{ order.invoice_number }}</td>
+              <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
+              <td>Rs. {{ order.amount }}</td>
+              <td><a href="{% url 'OrderInvoice' order.order_id %}" class="btn btn-sm btn-outline-primary">View Invoice</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info">You have no orders yet.</div>
+  {% endif %}
+</div>
+{% endblock %}

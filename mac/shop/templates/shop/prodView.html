@@ -1,0 +1,270 @@
+{% extends 'shop/basic.html' %}
+
+{% block title%} {{product.product_name}} - My Awesome Cart{% endblock %}
+{% block css %}
+/* ===== Page Layout ===== */
+.prod-view {
+    padding: 2rem 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* ===== Product Image ===== */
+.prod-image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    border: 2px solid #e0e0e0; /* light border */
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.prod-image:hover {
+    transform: scale(1.03);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== Card Layout for Image & Buttons ===== */
+.prod-actions,
+.prod-info {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1rem;
+}
+
+/* ===== Buttons Container ===== */
+.prod-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+/* Each button styling */
+.prod-actions .btn {
+    flex: 1 1 auto; /* grow and shrink evenly */
+    min-width: 150px;
+    padding: 0.55rem 1.2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* Buy Now button */
+.btn-buy {
+    background: linear-gradient(90deg, #ff8a65, #ff5252);
+    border: none;
+    color: white;
+}
+
+.btn-buy:hover {
+    background: linear-gradient(90deg, #ff7043, #ff1744);
+    transform: translateY(-2px);
+}
+
+/* Add To Cart button */
+.btn-primary.cart {
+    background-color: #1976d2;
+    border: none;
+    color: white;
+}
+
+.btn-primary.cart:hover {
+    background-color: #1565c0;
+    transform: translateY(-2px);
+}
+
+/* Continue Shopping button */
+.btn-success {
+    background-color: #43a047;
+    border: none;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #388e3c;
+    transform: translateY(-2px);
+}
+
+/* ===== Product Info Styling ===== */
+.prod-info h5 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.prod-price {
+    color: #d32f2f;
+    font-weight: 700;
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+}
+
+.prod-badge {
+    display: inline-block;
+    background-color: #f1f1f1;
+    color: #555;
+    padding: 0.4rem 0.8rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem;
+}
+
+.prod-desc {
+    line-height: 1.8;
+    color: #555;
+    font-size: 1rem;
+}
+
+/* ===== Responsive: stack on mobile ===== */
+@media (max-width: 767px) {
+    .prod-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .prod-actions .btn {
+        width: 100%;
+    }
+}
+
+
+{% endblock %}
+
+{% block body %}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row">
+                <img src="/media/{{product.image}}" class="prod-image" alt="{{product.product_name}}">
+            </div>
+            <div class="row">
+                <div class="prod-actions mt-3">
+                    <button id="buy-now" data-id="{{product.id}}" data-name="{{product.product_name}}"
+                        data-price="{{product.price}}" class="btn btn-buy text-white">Buy Now</button>
+                    <button id="add-{{product.id}}" data-id="{{product.id}}" data-name="{{product.product_name}}"
+                        data-price="{{product.price}}" class="btn btn-primary cart">Add To Cart</button>
+                    <a class="btn btn-success" href="{% url 'ShopHome' %}" role="button">Continue Shopping</a>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-8">
+            <div class="prod-info">
+                <h5>{{product.product_name}}</h5>
+                <p class="prod-price">Rs.{{product.price}}</p>
+                <p class="prod-badge">In stock</p>
+                <p class="prod-desc">{{product.desc}}</p>
+            </div>
+
+
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+{% endblock %}
+
+
+
+
+{% block js %}
+<script>
+    console.log('working');
+    if (localStorage.getItem('cart') == null) {
+        var cart = {};
+    }
+    else {
+        cart = JSON.parse(localStorage.getItem('cart'));
+        updateCartDisplay();
+    }
+    // Cart helpers: use keys like 'pr<id>' and store [qty, name, price]
+    function updateCartDisplay() {
+        var sum = 0;
+        var popStr = "<h5> Cart for your items in my shopping cart </h5><div class='mx-2 my-2'>";
+        var i = 1;
+        for (var item in cart) {
+            var qty = Array.isArray(cart[item]) ? Number(cart[item][0]) : Number(cart[item]);
+            sum += qty;
+            var nameEl = document.getElementById('name' + item);
+            var nameStr = nameEl ? nameEl.innerHTML : (Array.isArray(cart[item]) ? cart[item][1] : item);
+            popStr += "<b>" + i + "</b>. " + nameStr.slice(0, 19) + "... Qty: " + qty + "<br>";
+            i++;
+        }
+        popStr += "</div> <a href='/shop/checkout'><button class='btn btn-primary' id ='checkout'>Checkout</button></a> <button class='btn btn-primary' onclick='clearCart()' id ='clearCart'>Clear Cart</button>";
+        document.getElementById('popcart').setAttribute('data-content', popStr);
+        document.getElementById('cart').innerHTML = sum;
+        // do not auto-show popover on page load; show only after user actions
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function addToCartById(pid, qty, name, price) {
+        qty = qty || 1;
+        var key = 'pr' + pid;
+        if (cart[key] !== undefined) {
+            if (Array.isArray(cart[key])) {
+                cart[key][0] = cart[key][0] + qty;
+            } else {
+                cart[key] = [Number(cart[key]) + qty, name || '', parseInt(price) || 0];
+            }
+        } else {
+            var nm = name || (document.getElementById('namepr' + pid) ? document.getElementById('namepr' + pid).innerHTML : '');
+            var pr = price || (document.getElementById('pricepr' + pid) ? document.getElementById('pricepr' + pid).innerHTML : 0);
+            cart[key] = [qty, nm, parseInt(pr)];
+        }
+        updateCartDisplay();
+        // show popover to confirm change and auto-hide
+        $('#popcart').popover('show');
+        setTimeout(function () { $('#popcart').popover('hide'); }, 2200);
+    }
+
+    $('.cart').click(function () {
+        var pid = this.getAttribute('data-id') || this.id.replace('add-', '').replace('pr', '');
+        var name = this.getAttribute('data-name');
+        var price = this.getAttribute('data-price');
+        addToCartById(pid, 1, name, price);
+    });
+
+    // Buy Now: add item then go to checkout
+    document.getElementById('buy-now').addEventListener('click', function () {
+        var pid = this.getAttribute('data-id');
+        var name = this.getAttribute('data-name');
+        var price = this.getAttribute('data-price');
+        addToCartById(pid, 1, name, price);
+        // redirect to checkout
+        window.location = '/shop/checkout/';
+    });
+
+    function clearCart() {
+        for (var item in cart) {
+            var divEl = document.getElementById('div' + item);
+            if (divEl) {
+                divEl.innerHTML = '<button id="' + item + '" class="btn btn-primary cart">Add To Cart</button>';
+            }
+        }
+        localStorage.removeItem('cart');
+        cart = {};
+        updateCartDisplay();
+        // hide popover when cart is cleared
+        $('#popcart').popover('hide');
+    }
+
+    // initialize popover and display
+    $('#popcart').popover();
+    updateCartDisplay();
+</script>
+{% endblock %}

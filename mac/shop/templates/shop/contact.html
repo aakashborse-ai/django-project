@@ -1,0 +1,123 @@
+{% extends 'shop/basic.html' %}
+
+{% block title%} Contact Us - My Awesome Cart{% endblock %}
+{% block body %}
+<div class="container my-4">
+  <div class="row">
+    <div class="col-lg-7 mb-3">
+      <div class="card">
+        <div class="card-body border-color: #420f0f;">
+          <h4 class="card-title mb-3 color: #420f0f;">Contact Us</h4>
+
+          {% if thank %}
+          <div id="contact-success" class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Thanks!</strong> We received your message and will get back to you soon.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          {% endif %}
+
+          <form action="/shop/contact/" method="post" id="contactForm" novalidate>
+            {% csrf_token %}
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Your full name" required>
+                <div class="invalid-feedback">Please enter your name.</div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" required>
+                <div class="invalid-feedback">Please enter a valid email address.</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">+91</span>
+                </div>
+                <input type="tel" inputmode="numeric" pattern="\d{10}" maxlength="10" class="form-control" id="phone" name="phone" placeholder="10-digit phone number" required>
+                <div class="invalid-feedback" id="contact-phone-error">Please enter a 10-digit phone number.</div>
+              </div>
+              <small class="form-text text-muted">Numbers only, no spaces or dashes.</small>
+            </div>
+
+            <div class="form-group">
+              <label for="desc">Message</label>
+              <textarea class="form-control" id="desc" name="desc" rows="4" placeholder="How can we help?" required></textarea>
+              <div class="invalid-feedback">Please enter a message.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Contact Information</h5>
+          <p class="mb-1"><strong>Email:</strong> aakash@example.com</p>
+          <p class="mb-1"><strong>Phone:</strong> +91 98765 43210</p>
+          <p class="mb-0"><strong>Address:</strong> 123 Market St, Surat</p>
+          <hr>
+          <h6>Support Hours</h6>
+          <p class="small text-muted mb-0">Mon - Fri: 9:00 AM - 6:00 PM</p>
+          <p class="small text-muted">Sat: 10:00 AM - 2:00 PM</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+// Bootstrap form validation with extra phone enforcement
+(function(){
+  'use strict'
+  var form = document.getElementById('contactForm');
+  var phoneEl = document.getElementById('phone');
+  var phoneError = document.getElementById('contact-phone-error');
+
+  if (phoneEl){
+    phoneEl.addEventListener('input', function(){
+      this.value = this.value.replace(/\D+/g, '').slice(0,10);
+      phoneEl.classList.remove('is-invalid');
+      phoneError.textContent = '';
+    });
+    phoneEl.addEventListener('keypress', function(e){
+      var ch = String.fromCharCode(e.which || e.keyCode);
+      if (!/\d/.test(ch)) e.preventDefault();
+    });
+  }
+
+  if (form){
+    form.addEventListener('submit', function(event){
+      // use HTML5 validation first
+      if (!form.checkValidity()){
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      // custom phone validation
+      var phone = phoneEl ? phoneEl.value.trim() : '';
+      if (!/^\d{10}$/.test(phone)){
+        event.preventDefault();
+        event.stopPropagation();
+        phoneEl.classList.add('is-invalid');
+        phoneError.textContent = 'Please enter a valid 10-digit phone number.';
+        phoneEl.focus();
+      }
+
+      form.classList.add('was-validated');
+    }, false);
+  }
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'blog/basic.html' %}
+
+{% block css %}
+/* Blog list styles - polished card grid */
+.blog-grid .card { height:100%; border:0; box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+.blog-thumb { width:100%; height:180px; object-fit:cover; border-top-left-radius: .25rem; border-top-right-radius: .25rem; }
+@media (min-width: 992px) { .blog-thumb { height:200px; } }
+.blog-meta { font-size:.9rem; color:#6c757d; }
+.read-more { font-weight:600; }
+.card-excerpt { color:#495057; }
+/* Equalize card body heights */
+.card .card-body { display:flex; flex-direction:column; }
+.card .card-body p { flex:1 1 auto; margin-bottom:1rem; }
+{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+  <div class="row mb-4 align-items-center">
+    <div class="col">
+      <h2 class="mb-0">Blog</h2>
+      <p class="text-muted">Latest updates, tutorials and product news</p>
+    </div>
+    
+  </div>
+
+  <div class="row blog-grid">
+    {% for item in myposts %}
+      <div class="col-md-6 col-lg-4 mb-4 d-flex">
+        <article class="card w-100 h-100">
+          {% if item.thumbnail %}
+            <img src="/media/{{ item.thumbnail }}" alt="{{ item.tilte|escape }}" class="blog-thumb card-img-top">
+          {% else %}
+            <img src="https://via.placeholder.com/400x260?text=No+Image" class="blog-thumb card-img-top" alt="No image available">
+          {% endif %}
+          <div class="card-body d-flex flex-column">
+            <p class="mb-1 blog-meta"><small>Overview • {{ item.pub_date|date:"F j, Y" }}</small></p>
+            <h5 class="card-title">{{ item.tilte }}</h5>
+            <p class="card-text card-excerpt">{{ item.chead0|truncatewords:28 }}</p>
+            <div class="mt-auto d-flex justify-content-between align-items-center">
+              <a href="{% url 'blogpost' item.post_id %}" class="btn btn-sm btn-danger read-more">Read<<</a>
+              <small class="text-muted">{{ item.chead0|length }} chars</small>
+            </div>
+          </div>
+        </article>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="alert alert-info">No posts found.</div>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if page_obj %}
+  <nav aria-label="Blog pagination">
+    <ul class="pagination justify-content-center">
+      {% if page_obj.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">Previous</span></li>
+      {% endif %}
+      <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+      {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">Next</span></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+
+</div>
+{% endblock %}
