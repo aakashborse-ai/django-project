@@ -15,7 +15,7 @@
             {% endfor %}
           {% endif %}
           {% if request.GET.registered %}
-            <div class="alert alert-success">Account created. Please login.</div>
+            <div class="alert alert-success">Account created Please login.</div>
           {% endif %}
           <form method="post" action="{% url 'Login' %}">
             {% csrf_token %}
