@@ -9,7 +9,7 @@
       <div class="d-flex justify-content-between mb-3">
         <div>
           <h5>Invoice {{ invoice.invoice_no|default:order.invoice_number }}</h5>
-          <div class="text-muted">Order #{{ order.order_id }}</div>
+          <div class="text-muted">Order {{ order.order_id }}</div>
         </div>
         <div class="text-right">
           <div>{{ invoice.created_at|default:order.created_at }}</div>
